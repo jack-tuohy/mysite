@@ -13,6 +13,7 @@ def create_django_project(name="mysite"):
     In this case, "sitename" is the name of the new Django project.
     
     """
+
     # Create the Django project
     local("django-admin.py startproject %s" % name)
 
@@ -40,18 +41,23 @@ def create_sphinx_pages():
         http://<your_account_name>.github.com/<your_repo_name>/
 
     """
+
     # Create the new branch
     local("git branch gh-pages")
+
     # Move into it
     local("git checkout gh-pages")
+
     # Clear it out
     #local("git symbolic-ref HEAD refs/heads/gh-pages")
     #local("rm .git/index")
     #local("git clean -fdx")
     # Install sphinx
     local("pip install sphinx")
+
     # Save the dependencies to the requirements file
     local("pip freeze > requirements.txt")
+
     # Warn the user of a quirk before configuring with Sphinx
     confirm(""".    ___ ___ _     ___ ___  _       
   /\  |   | |_ |\ | |   |  / \ |\ | 
@@ -68,10 +74,13 @@ The second question it will ask is:
 YOU MUST ANSWER YES. THAT MEANS YOU TYPE 'Y' AND PRESS ENTER.
 
 DO YOU UNDERSTAND?""")
+
     # Start up a Sphinx project
     local("sphinx-quickstart")
+
     # Create the .nojekyll file GitHub requires
     local("touch .nojekyll")
+
     # Make the patches to Sphinx's Makefile we need
     local("echo '' >> Makefile")
     local("echo 'BUILDDIR      = ./' >> Makefile")
@@ -80,5 +89,27 @@ DO YOU UNDERSTAND?""")
     local("echo '\t$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)' >> Makefile")
     local("echo '\t@echo' >> Makefile")
     local("echo '\t@echo \"Build finished. The HTML pages are in $(BUILDDIR)\"' >> Makefile")
+
     # Make the branch for the first time
     local("make html")
+
+
+def update_sphinx_pages(message="Sphinx pages update"):
+    """
+    Compiles html code for the sphinx pages and pushes them to the repository.
+
+    Example usage:
+
+        $ update_sphinx_pages(message="Updated the home page look.")
+        
+    """
+    # Make the html pages
+    local("make html")
+
+    # Push to repository
+    local("git commit -am \"%s\"" % message)
+    local("git push origin gh-pages")
+
+
+
+    
