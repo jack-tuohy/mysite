@@ -45,9 +45,9 @@ def create_sphinx_pages():
     # Move into it
     local("git checkout gh-pages")
     # Clear it out
-    local("git symbolic-ref HEAD refs/heads/gh-pages")
-    local("rm .git/index")
-    local("git clean -fdx")
+    #local("git symbolic-ref HEAD refs/heads/gh-pages")
+    #local("rm .git/index")
+    #local("git clean -fdx")
     # Install sphinx
     local("pip install sphinx")
     # Save the dependencies to the requirements file
